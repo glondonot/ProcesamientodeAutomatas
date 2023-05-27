@@ -64,9 +64,10 @@ class AFNL():
             for y in self.delta:#y = estados en la funcion delta
                 if x != y and not accesible:
                     for z in self.Sigma:#z = estados luego de procesar una letra
-                        if x == self.delta[y][z]:
-                           accesible = True
-                           break
+                        for k in range(0,len(self.delta[y][z])):
+                            if x == self.delta[y][z][k]:
+                               accesible = True
+                               break
             if not accesible and x != self.q0:
                 self.estadosInaccesibles.append(x)
             accesible = False
