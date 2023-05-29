@@ -34,10 +34,24 @@ class AFNL():
                             if line[0:x] not in self.delta:
                                 self.delta[line[0:x]] = {}
                             self.delta[line[0:x]][line[x+1]] = line[x+3:len(line.rstrip())].split(';')
+                            self.delta[line[0:x]][line[x+1]] = line[x+3:len(line.rstrip())].split(';')
 
     def calcularLambdaClausura(self, estado):
         lambdaClausura = []
         if type(estado) == list:
+            for x in estado:
+                lambdaClausura.append(x)
+                if '$' in self.delta[x]:
+                    for y in self.delta[x]['$']:
+                        if y not in lambdaClausura:
+                            lambdaClausura.append(y)
+                    if len(lambdaClausura) > 1:
+                        for i in range(1,len(lambdaClausura)):
+                            for j in range(len(self.Q)):
+                                if '$' in self.delta[lambdaClausura[i]]:
+                                    for k in self.delta[lambdaClausura[i]]['$']:
+                                        if k not in lambdaClausura:
+                                            lambdaClausura.append(k) 
             for x in estado:
                 lambdaClausura.append(x)
                 if '$' in self.delta[x]:
@@ -65,6 +79,17 @@ class AFNL():
                                 for k in self.delta[lambdaClausura[i]]['$']:
                                     if k not in lambdaClausura:
                                         lambdaClausura.append(k)                                
+            if '$' in self.delta[estado]:
+                for i in self.delta[estado]['$']:
+                    if i not in lambdaClausura:
+                        lambdaClausura.append(i)
+                if len(lambdaClausura) > 1:
+                    for i in range(1,len(lambdaClausura)):
+                        for j in range(len(self.Q)):
+                            if '$' in self.delta[lambdaClausura[i]]:
+                                for k in self.delta[lambdaClausura[i]]['$']:
+                                    if k not in lambdaClausura:
+                                        lambdaClausura.append(k)                                
             return lambdaClausura
     
     def hallarEstadosInaccesibles(self):
@@ -81,6 +106,8 @@ class AFNL():
             accesible = False
                     
 pr = AFNL()
+pr.constructor('ex2afn$.nfe')
+print(pr.delta)
 pr.constructor('ex2afn$.nfe')
 print(pr.delta)
 # print(len(pr.delta['s2']['$']))
